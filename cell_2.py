@@ -65,7 +65,6 @@ class Cell_2(Cell):
         """
         ############## Task 5.2 begins ################
         """
-        
         #are the self. correct?
         Again: return?
         
@@ -77,12 +76,17 @@ class Cell_2(Cell):
                 if distance > 1e-16:    # should I make 1e-10?
                     self.list_potential_inner[idx] += utils.lj_potential(distance)
        
-       Even though there are 3 nested loop, each does not require many computations, so it might be fine
+       Even though there are 3 nested loop, each does not require many computations, 
+       so it might be fine.
+       If everything works, I can avoid using enumerate
        """             
         
         for idx, particle in enumerate(self.particle_list):
+            # loop through particles in this cell
             for c_idx in self.neighbor_cell_index:
+                # loop through neighbors
                 for other_particle in list_cells[c_idx].particle_list:
+                    # loop through particles in neighboring cell
                     distance = particle.distance(other_particle)
                     if distance > 1e-16:    # should I make 1e-10?
                         particle.phi += utils.lj_potential(distance)
@@ -100,7 +104,7 @@ class Cell_2(Cell):
         """
         ############## Task 5.3 begins ################
         self.p2p_self()
-        self.p2p_neigbo_cells(self.list_cells)    # again: self. ?
+        self.p2p_neigbor_cells(self.list_cells)    # again: self. ?
         
         # is this all?
         ############## Task 5.3 ends ################
