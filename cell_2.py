@@ -43,18 +43,14 @@ class Cell_2(Cell):
         ---> no big deal in computation!
 
         """
-        self.list_potential_inner = [0] * len(self.particle_list)
-        for idx, particle in enumerate(self.particle_list):
+        for idx, particle in enumerate(self.particle_list):    # loop through particle_list
             for other_particle in self.particle_list:
                 distance = particle.distance(other_particle)
                 if distance > 1e-16:    # should I make 1e-10?
                     particle.phi += utils.lj_potential(distance)
 
         """
-        return self_potential_inner ---> no
-        self.list_potential_inner[idx] += utils.lj_potential(distance)
-        
-        #no need for list_potential_inner
+        before: self.list_potential_inner[idx] += utils.lj_potential(distance)
         """
 
         ############## Task 5.1 ends ################
@@ -80,7 +76,10 @@ class Cell_2(Cell):
             List of all cells
         """
         ############## Task 5.3 begins ################
-
+        self.p2p_self()
+        self.p2p_neigbo_cells(self.list_cells)    # again: self. ?
+        
+        # is this all?
         ############## Task 5.3 ends ################
             
     def add_particle(self, particle):
