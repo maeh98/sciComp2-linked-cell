@@ -115,6 +115,23 @@ def get_list_cell(r_c, neighbor_delta_coordinate, domain=1.0, a=1):
     side_length = r_c / a
     ############## Task 2 begins ################
     
+    no_cells = np.arange(0, domain, side_length) # total number of cells in a row
+    x = neighbor_delta_coordinate[0][0] #get the x co-ordinate of 1st element
+    y = neighbor_delta_coordinate[0][1] #get the y co-ordinate of 1st element
+    z = 0 # cell index
+    first_cell = Cell_1(x, y, r_c, z, neighbor_delta_coordinate, a, domain)
+
+    for j in no_cells:
+        for i in no_cells:
+            if z == 0:
+                next_cell = first_cell
+                list_cells.append(next_cell)
+                z = z + 1
+            else:
+                next_cell = Cell_1(next_cell.lx + i, next_cell.ly + j, r_c, z, neighbor_delta_coordinate, a, domain)
+                list_cells.append(next_cell)
+                z = z + 1
+    
     ############## Task 2 ends ################
     return list_cells
 
