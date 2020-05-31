@@ -64,8 +64,31 @@ class Cell_2(Cell):
             List of all cells
         """
         ############## Task 5.2 begins ################
-
-        ############## Task 5.2 ends ################
+        """
+        
+        #are the self. correct?
+        Again: return?
+        
+        # Another option:
+        self.add_neighbor_cell(self.cell_index)
+        for idx, particle in enumerate(self.particle_list):
+            for other_particle in self.list_interaction_cells:
+                distance = particle.distance(other_particle)
+                if distance > 1e-16:    # should I make 1e-10?
+                    self.list_potential_inner[idx] += utils.lj_potential(distance)
+       
+       Even though there are 3 nested loop, each does not require many computations, so it might be fine
+       """             
+        
+        for idx, particle in enumerate(self.particle_list):
+            for c_idx in self.neighbor_cell_index:
+                for other_particle in list_cells[c_idx].particle_list:
+                    distance = particle.distance(other_particle)
+                    if distance > 1e-16:    # should I make 1e-10?
+                        particle.phi += utils.lj_potential(distance)
+            
+    
+    ############## Task 5.2 ends ################
                 
     def calculate_potential(self, list_cells):
         """calculates the potential on all particle inside a cell
