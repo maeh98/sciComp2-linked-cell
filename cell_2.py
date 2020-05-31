@@ -104,8 +104,7 @@ class Cell_2(Cell):
         """
         ############## Task 5.3 begins ################
         self.p2p_self()
-        self.p2p_neigbor_cells(self.list_cells)    # again: self. ?
-        
+        self.p2p_neigbor_cells(list_cells)    # not self.list_cells, right?
         # is this all?
         ############## Task 5.3 ends ################
             
