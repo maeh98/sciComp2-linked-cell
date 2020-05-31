@@ -48,15 +48,16 @@ class Cell_2(Cell):
             for other_particle in self.particle_list:
                 distance = particle.distance(other_particle)
                 if distance > 1e-16:    # should I make 1e-10?
-                    self.list_potential_inner[idx] += utils.lj_potential(distance)
+                    particle.phi += utils.lj_potential(distance)
 
         """
         return self_potential_inner ---> no
-        particle.phi += utils.lj_potential(distance)
+        self.list_potential_inner[idx] += utils.lj_potential(distance)
+        
         #no need for list_potential_inner
         """
 
-        ############## Task 2.1 ends ################
+        ############## Task 5.1 ends ################
     
     def p2p_neigbor_cells(self, list_cells):
         """calculates the potential on all particle inside a cell due to particles in the neighor cells
