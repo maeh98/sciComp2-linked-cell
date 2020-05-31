@@ -154,6 +154,12 @@ def assign_particle_to_cell(list_particles, list_cells, r_c, domain=1, a=1):
     side_length = r_c / a
     ############## Task 4 begins ################
 
+    for cell in list_cells:
+        for particle in list_particles:
+            if particle.coords[0] >= cell.lx and particle.coords[0] <= cell.lx + side_length:
+                if particle.coords[1] >= cell.ly and particle.coords[1] <= cell.ly + side_length:
+                    cell.particle_index.append(particle)
+
     ############## Task 4 ends ################
 
 def check_particle_assignment(N, list_cells):
