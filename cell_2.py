@@ -35,6 +35,26 @@ class Cell_2(Cell):
         """calculates the potential on all particle inside a cell due to particles in the same cell
         """
         ############## Task 5.1 begins ################
+        """
+        Make list of length of #particles in the cell.
+        Going through the list we calculate distance and potential of the particle and all other particles;
+        we store potential in its index of self.list_potentialinner.
+        Function is o(M^2), M is #particles per cell, which is computationally low
+        ---> no big deal in computation!
+
+        """
+        self.list_potential_inner = [0] * len(self.particle_list)
+        for idx, particle in enumerate(self.particle_list):
+            for other_particle in self.particle_list:
+                distance = particle.distance(other_particle)
+                if distance > 1e-16:    # should I make 1e-10?
+                    self.list_potential_inner[idx] += utils.lj_potential(distance)
+
+        """
+        return self_potential_inner ---> no
+        particle.phi += utils.lj_potential(distance)
+        #no need for list_potential_inner
+        """
 
         ############## Task 2.1 ends ################
     
