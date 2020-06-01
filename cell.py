@@ -45,7 +45,35 @@ class Cell(object, metaclass=ABCMeta):
         """
         self.neighbor_cell_index = []
         ############## Task 1.2 begins ##################
+         #define relative quadrant coordinates
+        first_quad = neighbor_delta_coordinate * np.array([1, 1])
+        second_quad = neighbor_delta_coordinate * np.array([-1, 1])
+        third_quad = neighbor_delta_coordinate * np.array([-1, -1])
+        fourth_quad = neighbor_delta_coordinate * np.array([1, -1])
 
+        L = int(round(domain / self.side_length)) #root of the number of squares in the domain
+        #x_step equals increase of 1 in list_cells
+        #y_step equals increase of L in list_cells
+
+        for cell in first_quad:
+            self.neighbor_cell_index.append(self.cell_index + cell[0] + cell[1] * L)
+
+        for cell in second_quad:
+            self.neighbor_cell_index.append(self.cell_index + cell[0] + cell[1] * L)
+
+        for cell in third_quad:
+            self.neighbor_cell_index.append(self.cell_index + cell[0] + cell[1] * L)
+
+        for cell in fourth_quad:
+            self.neighbor_cell_index.append(self.cell_index + cell[0] + cell[1] * L)
+
+        for i in np.arange(1,a+1):
+            self.neighbor_cell_index.append(self.cell_index + L * i)
+            self.neighbor_cell_index.append(self.cell_index - L * i)
+            self.neighbor_cell_index.append(self.cell_index - i)
+            self.neighbor_cell_index.append(self.cell_index + i)
+
+        self.neighbor_cell_index = list(set(self.neighbor_cell_index)) # eliminate duplicates
         ############## Task 1.2 ends ##################
         
     def __str__(self):
