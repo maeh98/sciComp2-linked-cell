@@ -34,48 +34,64 @@ class Cell(object, metaclass=ABCMeta):
         self.neighbor_cell_index = []
         self.create_neighbor_cell_index(neighbor_delta_coordinate, domain=domain)
                 
-    def create_neighbor_cell_index(self, neighbor_delta_coordinate, domain=1):
-        """Creates neighbor cell index for the current cell
-        Parameters
-        ----------
-        neighbor_delta_coordinate: list
-            Relative 2d index of all neighbor interaction cells in first quadrant
-        domain: float (Optional value 1.0)
-            Size of domain
-        """
-        self.neighbor_cell_index = []
-        ############## Task 1.2 begins ##################
-         #define relative quadrant coordinates
-        first_quad = neighbor_delta_coordinate * np.array([1, 1])
-        second_quad = neighbor_delta_coordinate * np.array([-1, 1])
-        third_quad = neighbor_delta_coordinate * np.array([-1, -1])
-        fourth_quad = neighbor_delta_coordinate * np.array([1, -1])
+def create_neighbor_cell_index(self, neighbor_delta_coordinate, domain=1):
+    """Creates neighbor cell index for the current cell
+    Parameters
+    ----------
+    neighbor_delta_coordinate: list
+        Relative 2d index of all neighbor interaction cells in first quadrant
+    domain: float (Optional value 1.0)
+        Size of domain
+    """
+    self.neighbor_cell_index = []
+    ############## Task 1.2 begins ##################
+    #define relative quadrant coordinates
+    first_quad = neighbor_delta_coordinate * np.array([1, 1])
+    second_quad = neighbor_delta_coordinate * np.array([-1, 1])
+    third_quad = neighbor_delta_coordinate * np.array([-1, -1])
+    fourth_quad = neighbor_delta_coordinate * np.array([1, -1])
+    verticals = []
+    horizontals = []
+    
+    #get relative coordinates of horizontal + vertical cells:
+    for i in np.arange(1, a + 1):
+        verticals.append([0, i])
+        verticals.append([0, -i])
+        horizontals.append([i, 0])
+        horizontals.append([-i, 0])
+    verticals = np.asarray(verticals)
+    horizontals = np.asarray(horizontals)
+    
+    #relative 2d coordinates
+    rel_2d_coords = np.concatenate((first_quad, second_quad, third_quad, fourth_quad, verticals, horizontals),axis = 0)
 
-        L = int(round(domain / self.side_length)) #root of the number of squares in the domain
-        #x_step equals increase of 1 in list_cells
-        #y_step equals increase of L in list_cells
+    #absolute 2d coordinates
+    abs_2d_coords = self.cell_center + rel_2d_coords * self.side_length
+    
+    #check right domain boundary:
+    right_bound = (abs_2d_coords[:, 0] <= domain)
+    #check left domain boundary:
+    left_bound = (abs_2d_coords[:, 0] >= 0)
+    #check bottom domain boundary:
+    bottom_bound = (abs_2d_coords[:, 1] >= 0)
+    #check top domain boundary:
+    top_bound = (abs_2d_coords[:, 1] <= domain)
 
-        for cell in first_quad:
-            self.neighbor_cell_index.append(self.cell_index + cell[0] + cell[1] * L)
+    bool_mask = right_bound & left_bound & bottom_bound & top_bound
 
-        for cell in second_quad:
-            self.neighbor_cell_index.append(self.cell_index + cell[0] + cell[1] * L)
+    #relative 2d coordinates inside domain
+    rel_inside_domain = rel_2d_coords[bool_mask]
 
-        for cell in third_quad:
-            self.neighbor_cell_index.append(self.cell_index + cell[0] + cell[1] * L)
+    L = int(round(domain / side_length)) #root of the number of squares in the domain
+    
+    #x_step equals increase of 1 in list_cells
+    #y_step equals increase of L in list_cells
+    for cell in rel_inside_domain:
+        neighbor_cell_index.append(cell_index + cell[0] + cell[1] * L)
 
-        for cell in fourth_quad:
-            self.neighbor_cell_index.append(self.cell_index + cell[0] + cell[1] * L)
-            
-        #add indices on horizontal/vertical axis
-        for i in np.arange(1,a+1):
-            self.neighbor_cell_index.append(self.cell_index + L * i)
-            self.neighbor_cell_index.append(self.cell_index - L * i)
-            self.neighbor_cell_index.append(self.cell_index - i)
-            self.neighbor_cell_index.append(self.cell_index + i)
-
-        self.neighbor_cell_index = list(set(self.neighbor_cell_index)) # eliminate duplicates
-        ############## Task 1.2 ends ##################
+    self.neighbor_cell_index = list(set(neighbor_cell_index)) # eliminate duplicates
+    
+    ############## Task 1.2 ends ##################
         
     def __str__(self):
         return 'Object of type cell with center {}'.format(self.cell_center)
