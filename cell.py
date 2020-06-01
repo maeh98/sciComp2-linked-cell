@@ -66,7 +66,8 @@ class Cell(object, metaclass=ABCMeta):
 
         for cell in fourth_quad:
             self.neighbor_cell_index.append(self.cell_index + cell[0] + cell[1] * L)
-
+            
+        #add indices on horizontal/vertical axis
         for i in np.arange(1,a+1):
             self.neighbor_cell_index.append(self.cell_index + L * i)
             self.neighbor_cell_index.append(self.cell_index - L * i)
