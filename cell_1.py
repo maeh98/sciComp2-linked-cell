@@ -135,21 +135,21 @@ def get_list_cell(r_c, neighbor_delta_coordinate, domain=1.0, a=1):
     ############## Task 2 begins ################
     
     no_cells = np.arange(0, domain, side_length) # total number of cells in a row
-    x = neighbor_delta_coordinate[0][0] #get the x co-ordinate of 1st element
-    y = neighbor_delta_coordinate[0][1] #get the y co-ordinate of 1st element
     z = 0 # cell index
-    first_cell = Cell_1(x, y, r_c, z, neighbor_delta_coordinate, a, domain)
+    first_cell = Cell_1(0, 0, r_c, z, neighbor_delta_coordinate, a, domain) #starting lower left coordinate of cell at (0,0)
 
     for j in no_cells:
         for i in no_cells:
             if z == 0:
                 next_cell = first_cell
-                list_cells.append(next_cell)
-                z = z + 1
+                list_cells.append(next_cell) #adding the first cell in the list
+                z = z + 1                    # incrementing cell index
             else:
-                next_cell = Cell_1(next_cell.lx + i, next_cell.ly + j, r_c, z, neighbor_delta_coordinate, a, domain)
-                list_cells.append(next_cell)
-                z = z + 1
+                next_lx = next_cell.cell_center[0] -  0.5 * side_length  # getting lx from previous cell
+                next_ly = next_cell.cell_center[1] -  0.5 * side_length # getting ly from previous cell
+                next_cell = Cell_1(next_lx + i, next_ly + j, r_c, z, neighbor_delta_coordinate, a, domain) # creating next cell
+                list_cells.append(next_cell) # adding the next cell in the list
+                z = z + 1                    # incrementing cell index
     
     ############## Task 2 ends ################
     return list_cells
@@ -174,9 +174,11 @@ def assign_particle_to_cell(list_particles, list_cells, r_c, domain=1, a=1):
     ############## Task 4 begins ################
 
     for cell in list_cells:
-        for particle in list_particles:
-            if particle.coords[0] >= cell.lx and particle.coords[0] <= cell.lx + side_length:
-                if particle.coords[1] >= cell.ly and particle.coords[1] <= cell.ly + side_length:
+        cell_x = cell.cell_center[0] -  0.5 * side_length # getting lx from current cell
+        cell_y = cell.cell_center[1] -  0.5 * side_length # getting ly from current cell
+        for particle in list_particles:    
+            if particle.x >= cell_x  and particle.x < cell_x + side_length: # checking the x co-ordinate of the particle
+                if particle.y >= cell_y and particle.y < cell_y + side_length: # checking the y co-ordinate of the particle
                     cell.particle_index.append(particle)
 
     ############## Task 4 ends ################
