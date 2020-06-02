@@ -63,7 +63,7 @@ class Cell_1(Cell):
         particles_outside_cell = []
 
         for cell_id in self.neighbor_cell_index:
-            particles_outside_cell.append(list_cells[cell_id].particle_index) # Get the ids of particles outside the cell
+            particles_outside_cell.extend(list_cells[cell_id].particle_index) # Get the ids of particles outside the cell
 
         for particle_inside_cell in self.particle_index:
             for particle_outside_cell in particles_outside_cell:
@@ -145,9 +145,7 @@ def get_list_cell(r_c, neighbor_delta_coordinate, domain=1.0, a=1):
                 list_cells.append(next_cell) #adding the first cell in the list
                 z = z + 1                    # incrementing cell index
             else:
-                next_lx = next_cell.cell_center[0] -  0.5 * side_length  # getting lx from previous cell
-                next_ly = next_cell.cell_center[1] -  0.5 * side_length # getting ly from previous cell
-                next_cell = Cell_1(next_lx + i, next_ly + j, r_c, z, neighbor_delta_coordinate, a, domain) # creating next cell
+                next_cell = Cell_1(i, j, r_c, z, neighbor_delta_coordinate, a, domain) # creating next cell
                 list_cells.append(next_cell) # adding the next cell in the list
                 z = z + 1                    # incrementing cell index
     
@@ -176,10 +174,12 @@ def assign_particle_to_cell(list_particles, list_cells, r_c, domain=1, a=1):
     for cell in list_cells:
         cell_x = cell.cell_center[0] -  0.5 * side_length # getting lx from current cell
         cell_y = cell.cell_center[1] -  0.5 * side_length # getting ly from current cell
-        for particle in list_particles:    
+        i = 0
+        for particle in list_particles:
             if particle.x >= cell_x  and particle.x < cell_x + side_length: # checking the x co-ordinate of the particle
                 if particle.y >= cell_y and particle.y < cell_y + side_length: # checking the y co-ordinate of the particle
-                    cell.particle_index.append(particle)
+                    cell.add_particle(i)
+            i = i + 1
 
     ############## Task 4 ends ################
 
