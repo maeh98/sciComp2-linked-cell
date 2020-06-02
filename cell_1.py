@@ -40,6 +40,12 @@ class Cell_1(Cell):
         """
         ############## Task 3.1 begins ################
 
+        for current_particle, current_id in enumerate(self.particle_index):
+            for target_particle, target_id,  in enumerate(self.particle_index):
+                if current_particle != target_particle: # No need to calculate potential with itself
+                     distance_to_target = list_particles[current_id].distance(list_particles[target_id]) # Calculate distance to the target particle
+                     list_particles[current_id].phi += utils.lj_potential(distance_to_target) # Calculate LJ Potential between the pair
+
         ############## Task 3.1 ends ################
     
     def p2p_neigbor_cells(self, list_particles, list_cells):
@@ -54,6 +60,16 @@ class Cell_1(Cell):
         """
         ############## Task 3.2 begins ################
 
+        particles_outside_cell = []
+
+        for cell_id in self.neighbor_cell_index:
+            particles_outside_cell.append(list_cells[cell_id].particle_index) # Get the ids of particles outside the cell
+
+        for particle_inside_cell in self.particle_index:
+            for particle_outside_cell in particles_outside_cell:
+                distance_to_target = list_particles[particle_inside_cell].distance(list_particles[particle_outside_cell]) # Calculate distance to the target particle
+                list_particles[particle_inside_cell].phi += utils.lj_potential(distance_to_target) # Calculate LJ Potential between the pair
+
         ############## Task 3.2 ends ################
                 
     def calculate_potential(self, list_particles, list_cells):
@@ -67,6 +83,9 @@ class Cell_1(Cell):
             List of all cells
         """
         ############## Task 3.3 begins ################
+
+        self.p2p_self(list_particles)
+        self.p2p_neigbor_cells(list_particles, list_cells)
 
         ############## Task 3.3 ends ################
             
@@ -115,6 +134,23 @@ def get_list_cell(r_c, neighbor_delta_coordinate, domain=1.0, a=1):
     side_length = r_c / a
     ############## Task 2 begins ################
     
+    no_cells = np.arange(0, domain, side_length) # total number of cells in a row
+    x = neighbor_delta_coordinate[0][0] #get the x co-ordinate of 1st element
+    y = neighbor_delta_coordinate[0][1] #get the y co-ordinate of 1st element
+    z = 0 # cell index
+    first_cell = Cell_1(x, y, r_c, z, neighbor_delta_coordinate, a, domain)
+
+    for j in no_cells:
+        for i in no_cells:
+            if z == 0:
+                next_cell = first_cell
+                list_cells.append(next_cell)
+                z = z + 1
+            else:
+                next_cell = Cell_1(next_cell.lx + i, next_cell.ly + j, r_c, z, neighbor_delta_coordinate, a, domain)
+                list_cells.append(next_cell)
+                z = z + 1
+    
     ############## Task 2 ends ################
     return list_cells
 
@@ -136,6 +172,12 @@ def assign_particle_to_cell(list_particles, list_cells, r_c, domain=1, a=1):
     """
     side_length = r_c / a
     ############## Task 4 begins ################
+
+    for cell in list_cells:
+        for particle in list_particles:
+            if particle.coords[0] >= cell.lx and particle.coords[0] <= cell.lx + side_length:
+                if particle.coords[1] >= cell.ly and particle.coords[1] <= cell.ly + side_length:
+                    cell.particle_index.append(particle)
 
     ############## Task 4 ends ################
 

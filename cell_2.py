@@ -35,8 +35,25 @@ class Cell_2(Cell):
         """calculates the potential on all particle inside a cell due to particles in the same cell
         """
         ############## Task 5.1 begins ################
+        """
+        Make list of length of #particles in the cell.
+        Going through the list we calculate distance and potential of the particle and all other particles;
+        we store potential in its index of self.list_potentialinner.
+        Function is o(M^2), M is #particles per cell, which is computationally low
+        ---> no big deal in computation!
 
-        ############## Task 2.1 ends ################
+        """
+        for idx, particle in enumerate(self.particle_list):    # loop through particle_list
+            for other_particle in self.particle_list:
+                distance = particle.distance(other_particle)
+                if distance > 1e-16:    # should I make 1e-10?
+                    particle.phi += utils.lj_potential(distance)
+
+        """
+        before: self.list_potential_inner[idx] += utils.lj_potential(distance)
+        """
+
+        ############## Task 5.1 ends ################
     
     def p2p_neigbor_cells(self, list_cells):
         """calculates the potential on all particle inside a cell due to particles in the neighor cells
@@ -47,8 +64,35 @@ class Cell_2(Cell):
             List of all cells
         """
         ############## Task 5.2 begins ################
-
-        ############## Task 5.2 ends ################
+        """
+        #are the self. correct?
+        Again: return?
+        
+        # Another option:
+        self.add_neighbor_cell(self.cell_index)
+        for idx, particle in enumerate(self.particle_list):
+            for other_particle in self.list_interaction_cells:
+                distance = particle.distance(other_particle)
+                if distance > 1e-16:    # should I make 1e-10?
+                    self.list_potential_inner[idx] += utils.lj_potential(distance)
+       
+       Even though there are 3 nested loop, each does not require many computations, 
+       so it might be fine.
+       If everything works, I can avoid using enumerate
+       """             
+        
+        for idx, particle in enumerate(self.particle_list):
+            # loop through particles in this cell
+            for c_idx in self.neighbor_cell_index:
+                # loop through neighbors
+                for other_particle in list_cells[c_idx].particle_list:
+                    # loop through particles in neighboring cell
+                    distance = particle.distance(other_particle)
+                    if distance > 1e-16:    # should I make 1e-10?
+                        particle.phi += utils.lj_potential(distance)
+            
+    
+    ############## Task 5.2 ends ################
                 
     def calculate_potential(self, list_cells):
         """calculates the potential on all particle inside a cell
@@ -59,7 +103,9 @@ class Cell_2(Cell):
             List of all cells
         """
         ############## Task 5.3 begins ################
-
+        self.p2p_self()
+        self.p2p_neigbor_cells(list_cells)    # not self.list_cells, right?
+        # is this all?
         ############## Task 5.3 ends ################
             
     def add_particle(self, particle):
