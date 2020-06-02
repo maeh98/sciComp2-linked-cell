@@ -136,18 +136,12 @@ def get_list_cell(r_c, neighbor_delta_coordinate, domain=1.0, a=1):
     
     no_cells = np.arange(0, domain, side_length) # total number of cells in a row
     z = 0 # cell index
-    first_cell = Cell_1(0, 0, r_c, z, neighbor_delta_coordinate, a, domain) #starting lower left coordinate of cell at (0,0)
 
     for j in no_cells:
         for i in no_cells:
-            if z == 0:
-                next_cell = first_cell
-                list_cells.append(next_cell) #adding the first cell in the list
-                z = z + 1                    # incrementing cell index
-            else:
-                next_cell = Cell_1(i, j, r_c, z, neighbor_delta_coordinate, a, domain) # creating next cell
-                list_cells.append(next_cell) # adding the next cell in the list
-                z = z + 1                    # incrementing cell index
+            next_cell = Cell_1(i, j, r_c, z, neighbor_delta_coordinate, a, domain) # creating next cell
+            list_cells.append(next_cell) # adding the next cell in the list
+            z = z + 1                    # incrementing cell index
     
     ############## Task 2 ends ################
     return list_cells
