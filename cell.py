@@ -54,7 +54,7 @@ def create_neighbor_cell_index(self, neighbor_delta_coordinate, domain=1):
     horizontals = []
     
     #get relative coordinates of horizontal + vertical cells:
-    for i in np.arange(1, a + 1):
+    for i in np.arange(1, self.a + 1):
         verticals.append([0, i])
         verticals.append([0, -i])
         horizontals.append([i, 0])
