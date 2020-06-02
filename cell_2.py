@@ -80,7 +80,7 @@ class Cell_2(Cell):
        so it might be fine.
        If everything works, I can avoid using enumerate
        """             
-        
+        """
         for idx, particle in enumerate(self.particle_list):
             # loop through particles in this cell
             for c_idx in self.neighbor_cell_index:
@@ -90,7 +90,20 @@ class Cell_2(Cell):
                     distance = particle.distance(other_particle)
                     if distance > 1e-16:    # should I make 1e-10?
                         particle.phi += utils.lj_potential(distance)
-            
+        """
+        particles_outside_cell = []
+        
+        for c_idx in self.neighbor_cell_index:
+            particles_outside_cell.extend(list_cells[c_idx].particle_list)
+        
+        for particle in self.particle_list:
+            # loop through particles in this cell        
+            # loop through neighbors
+            for other_particle in particles_outside_cell:
+                # loop through particles in neighboring cell
+                distance = particle.distance(other_particle)
+                if distance > 1e-16:    # should I make 1e-10?
+                    particle.phi += utils.lj_potential(distance)
     
     ############## Task 5.2 ends ################
                 
