@@ -78,8 +78,7 @@ class Cell_2(Cell):
         """
         ############## Task 5.3 begins ################
         self.p2p_self()
-        self.p2p_neigbor_cells(list_cells)    # not self.list_cells, right?
-        # is this all?
+        self.p2p_neigbor_cells(list_cells)    
         ############## Task 5.3 ends ################
             
     def add_particle(self, particle):
